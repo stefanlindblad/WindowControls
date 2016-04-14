@@ -1,3 +1,4 @@
 #WindowControls - gitignore File
 **/bin/**
 **/obj/**
+.vs/
