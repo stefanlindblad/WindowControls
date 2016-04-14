@@ -1,0 +1,206 @@
+﻿/* ------------- */
+/* Overall style */
+/* ------------- */
+
+body {
+    background: #484848;
+    color: #B0B0B0;
+    font-size: 0;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+input[type="range"]::-webkit-slider-thumb,
+input[type="search"] {
+    -webkit-appearance: none;
+}
+
+button,
+input[type="button"],
+input[type="text"],
+input[type="search"],
+label,
+select {
+    color: #B0B0B0;
+    font-family: "Open Sans";
+    font-size: 12px;
+}
+
+button,
+input[type="button"],
+select {
+    text-shadow: 0px -1px 0px #333;
+}
+
+input[type="range"],
+input[type="search"],
+input[type="text"] {
+    background: #383838;
+    box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1),
+                0px 1px 0px rgba(255, 255, 255, 0.1),
+                inset 0px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+input[type="search"]:focus,
+input[type="text"]:focus {
+    box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1),
+                0px 1px 0px rgba(255, 255, 255, 0.1),
+                inset 0px 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+button,
+input[type="button"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"]::-webkit-slider-thumb,
+select {
+    background: linear-gradient(#6B6B6B, #4C4C4C);
+    box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1),
+                0px 1px 0px rgba(255, 255, 255, 0.1),
+                inset 0px 1px 0px rgba(255, 255, 255, 0.1);
+    border-color: #333;
+    border-style: solid;
+    border-width: 1px;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="checkbox"]:hover,
+input[type="radio"]:hover,
+input[type="range"]::-webkit-slider-thumb:active,
+input[type="range"]::-webkit-slider-thumb:hover
+select:hover {
+    background: linear-gradient(#797979, #5E5E5E);
+}
+
+button:active,
+input[type="button"]:active,
+input[type="checkbox"]:active,
+input[type="radio"]:active,
+select:active,
+select:focus {
+    background: linear-gradient(#444, #4C4C4C);
+}
+
+button,
+input[type="button"],
+input[type="checkbox"],
+input[type="range"],
+input[type="text"],
+select {
+    border-radius: 3px;
+}
+
+input[type="radio"],
+input[type="range"]::-webkit-slider-thumb {
+    border-radius: 6px;
+}
+
+
+/* ------ */
+/* Tweaks */
+/* ------ */
+
+label {
+    line-height: 22px;
+    min-height: 22px;
+    overflow: hidden;
+    resize: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+button,
+input[type="button"] {
+    padding: 1px 9px 2px 9px;
+}
+
+input[type="text"] {
+    border-color: transparent;
+    border-width: 0px 1px;
+    height: 22px;
+    padding: 5px;
+}
+
+input[type="search"] {
+    border-radius: 11px;
+    border-style: none;
+    height: 22px;
+    padding: 0px 5px 0px 22px;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+}
+
+input[type="text"],
+input[type="search"] {
+    line-height: 22px;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"]::-webkit-slider-thumb {
+    height: 13px;
+    width: 13px;
+    position: relative;
+}
+
+input[type="checkbox"] {
+    top: 5px;
+}
+
+input[type="radio"] {
+    top: 2px;
+}
+
+input[type="checkbox"]:checked {
+    background: linear-gradient(#383838, #444);
+}
+
+input[type="checkbox"]:checked::after {
+    color: #169AB8;
+    content: "\f00c";
+    font-family: FontAwesome;
+    font-size: 11px;
+    position: absolute;
+}
+
+input[type="radio"]:checked {
+    background-image: -webkit-radial-gradient(center center, circle contain, #169AB8, #169AB8 2.5px, #383838 3.5px);
+}
+
+input[type="range"] {
+    border-color: transparent;
+    height: 5px;
+    position: relative;
+    top: -1px;
+}
+
+::-webkit-input-placeholder {
+    color: #6B6B6B;
+    font-style: italic;
+}
+
+:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+
+select {
+    height: 22px;
+    padding: 0px 0px 1px 5px;
+    position: relative;
+}
+
+select::after {
+    color: #169AB8;
+    content: "\f00c";
+    font-family: FontAwesome;
+    font-size: 11px;
+    position: absolute;
+}
+
+select option {
+    color: black;
+}

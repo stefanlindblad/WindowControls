@@ -1,0 +1,29 @@
+﻿/* These styles disable various web-like behaviors and make the content behave more like a desktop application. */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    cursor: default;
+    overflow: hidden;
+    height: 100%;
+}
+
+img {
+    -webkit-user-drag: none;
+}
+
+input {
+    resize: none;
+}
+
+:focus {
+    outline: 0;
+}
