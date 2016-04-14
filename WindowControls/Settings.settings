@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Stingray.WindowControls" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="_mainWindowTitle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">WindowControls - Style Preview</Value>
+    </Setting>
+    <Setting Name="_ctrlWindowTitle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Control Panel</Value>
+    </Setting>
+    <Setting Name="_mainWindowWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1024</Value>
+    </Setting>
+    <Setting Name="_mainWindowHeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">768</Value>
+    </Setting>
+    <Setting Name="_ctrlWindowWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="_ctrlWindowHeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="_contentPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">../../../Content</Value>
+    </Setting>
+    <Setting Name="_defaultPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9696</Value>
+    </Setting>
+    <Setting Name="_mainWindowName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">document-window</Value>
+    </Setting>
+    <Setting Name="_ctrlWindowName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">control-panel</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

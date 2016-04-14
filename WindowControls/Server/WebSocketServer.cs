@@ -13,7 +13,7 @@ namespace Stingray.WindowControls.Server
     /// Sends a "helloFromServer" message when a client connects. Prints to stdout if it receives a "helloFromView" message.
     /// Demonstrates serialization to and from JSON, plus sending and receiving messages.
     /// </summary>
-    internal class ExampleWebSocketServer : IDisposable
+    internal class WebSocketServer : IDisposable
     {
         [CanBeNull] private IWebSocketServer _server;
 
@@ -21,9 +21,9 @@ namespace Stingray.WindowControls.Server
         /// Starts the example web socket server listening for connections to the specified port. Polling happens on a background thread.
         /// </summary>
         /// <param name="port">Port that clients can connect to.</param>
-        public ExampleWebSocketServer(int port)
+        public WebSocketServer(int port)
         {
-            _server = new WebSocketServer("ws://127.0.0.1:" + port);
+            _server = new Fleck.WebSocketServer("ws://127.0.0.1:" + port);
             _server.Start(ConfigureConnection);
         }
 
@@ -63,7 +63,7 @@ namespace Stingray.WindowControls.Server
                 switch (messageType)
                 {
                     case "helloFromView":
-                        Debug.WriteLine(jsonMessage["name"] + " says hello!", "ExampleWebSocketServer");
+                        Debug.WriteLine(jsonMessage["name"] + " says hello!", "WebSocketServer");
                         break;
 
                     default:
