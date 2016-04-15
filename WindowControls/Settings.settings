@@ -3,22 +3,22 @@
   <Profiles />
   <Settings>
     <Setting Name="_mainWindowTitle" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">WindowControls - Style Preview</Value>
+      <Value Profile="(Default)">Headline Style - Preview</Value>
     </Setting>
     <Setting Name="_ctrlWindowTitle" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Control Panel</Value>
+      <Value Profile="(Default)">Headline Style - Control Panel</Value>
     </Setting>
     <Setting Name="_mainWindowWidth" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1024</Value>
+      <Value Profile="(Default)">800</Value>
     </Setting>
     <Setting Name="_mainWindowHeight" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">768</Value>
+      <Value Profile="(Default)">400</Value>
     </Setting>
     <Setting Name="_ctrlWindowWidth" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">300</Value>
     </Setting>
     <Setting Name="_ctrlWindowHeight" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">200</Value>
+      <Value Profile="(Default)">260</Value>
     </Setting>
     <Setting Name="_contentPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">../../../Content</Value>

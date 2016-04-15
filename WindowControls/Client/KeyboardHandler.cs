@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using System;
 using CefSharp;
 
 namespace Stingray.WindowControls.Client
@@ -26,7 +27,6 @@ namespace Stingray.WindowControls.Client
                         return true;
                 }
             }
-
             // The key event was not handled by us.
             return false;
         }

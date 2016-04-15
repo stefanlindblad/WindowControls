@@ -69,10 +69,12 @@ namespace Stingray.WindowControls.Server
                         Console.WriteLine(name + " registered!", "WebSocketServer");
                         break;
 
-                    case "changeValue":
+                    case "changeVariable":
+                        var variable = (string)jsonMessage["variable"];
+                        var action = (string)jsonMessage["action"];
                         WebSocketServer.BroadcastMessage(message, name);
+                        //Console.WriteLine(action + ": " + variable, "WebSocketServer");
                         break;
-
 
                     default:
                         throw new NotImplementedException("Unsupported message type: " + messageType);
@@ -80,7 +82,8 @@ namespace Stingray.WindowControls.Server
             }
             catch (Exception exception)
             {
-                connection.Send(CreateErrorMessage(exception));
+                if(connection.IsAvailable)
+                    connection.Send(CreateErrorMessage(exception));
             }
         }
 
@@ -88,8 +91,8 @@ namespace Stingray.WindowControls.Server
         {
             foreach (KeyValuePair<string, IWebSocketConnection> entry in _connections)
             {
-                if (entry.Key != sender)
-                    entry.Value.Send(message);
+                if (entry.Key != sender && entry.Value.IsAvailable)
+                        entry.Value.Send(message);
             }
         }
 

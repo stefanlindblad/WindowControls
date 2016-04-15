@@ -25,7 +25,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("WindowControls - Style Preview")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Headline Style - Preview")]
         public string _mainWindowTitle {
             get {
                 return ((string)(this["_mainWindowTitle"]));
@@ -34,7 +34,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Control Panel")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Headline Style - Control Panel")]
         public string _ctrlWindowTitle {
             get {
                 return ((string)(this["_ctrlWindowTitle"]));
@@ -43,7 +43,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
+        [global::System.Configuration.DefaultSettingValueAttribute("800")]
         public int _mainWindowWidth {
             get {
                 return ((int)(this["_mainWindowWidth"]));
@@ -52,7 +52,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("768")]
+        [global::System.Configuration.DefaultSettingValueAttribute("400")]
         public int _mainWindowHeight {
             get {
                 return ((int)(this["_mainWindowHeight"]));
@@ -70,7 +70,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("260")]
         public int _ctrlWindowHeight {
             get {
                 return ((int)(this["_ctrlWindowHeight"]));

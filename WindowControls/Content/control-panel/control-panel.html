@@ -13,20 +13,38 @@
         <script type="text/javascript" src="control-panel.js"></script>
     </head>
     <body>
-        <div style="font-size: 12px; margin-bottom: 18px;">
-            The Controls Window should contain controls that adjust the look of the headline in the Document Window.
-            Example control usage:
+        <div id="mainElement">
+            <div id="textElement">
+                <label id="textLabel">Text:</label>
+                <input id="textInput" type="text" placeholder="Enter Headline Text..." size="27"/>
+            </div>
+            <div id="checkElement">
+                <label class="marginToogles"><input id="boldCheckBox" type="checkbox"/>Bold</label>
+                <label class="marginToogles"><input id="italicCheckBox" type="checkbox"/>Italic</label>
+                <label class="marginToogles"><input id="underlineCheckBox" type="checkbox"/>Underline</label>
+            </div>
+            <div id="fontElement">
+                <label id="fontLabel">Font:</label>
+                <select id="fontSelect">
+                    <option>No installed Fonts found...</option>
+                </select>
+            </div>
+            <div id="sizeElement">
+                <label id="sizeLabel">Size:</label>
+                <input class="marginLR" id="sizeRange" value="4" type="range" min="1" max="8" step="1" oninput="document.getElementById('sizeValue').value = this.value;"/>
+                <input type="text" readonly="true" id="sizeValue" size="1" value="4"/>
+            </div>
+            <div id="spacingElement">
+                <label id="spacingLabel">Spacing:</label>
+                <input id="spaceRange" value="0" type="range" min="-4" max="8" step="1" oninput="document.getElementById('spacingValue').value = this.value;"/>
+                <input type="text" readonly="true" id="spacingValue" size="1" value="0"/>
+            </div>
+            <div id="buttonElement">
+                <input class="marginButtons" id="undoButton" type="button" value="Undo"/>
+                <input class="marginButtons" id="redoButton" type="button" value="Redo"/>
+                <input class="marginButtons" id="loadButton" type="button" value="Load"/>
+                <input class="marginButtons" id="saveButton" type="button" value="Save"/>
+            </div>
         </div>
-        <label>Label</label>
-        <input type="text" placeholder="Enter Text..."/>
-        <input type="button" value="Button"/>
-        <input type="range" min="-0.5" max="0.5" step="0.001"/>
-        <label><input type="checkbox"/>Checkbox</label>
-        <select>
-            <option>Selection One</option>
-            <option>Selection Two</option>
-        </select>
-        <label><input type="radio" name="radio"/>Radio A</label>
-        <label><input type="radio" name="radio"/>Radio B</label>
     </body>
 </html>
