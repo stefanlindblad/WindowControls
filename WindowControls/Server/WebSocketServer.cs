@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using Fleck;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -16,6 +16,7 @@ namespace Stingray.WindowControls.Server
     internal class WebSocketServer : IDisposable
     {
         [CanBeNull] private IWebSocketServer _server;
+        private static Dictionary<String, IWebSocketConnection> _connections = new Dictionary<string, IWebSocketConnection>(); 
 
         /// <summary>
         /// Starts the example web socket server listening for connections to the specified port. Polling happens on a background thread.
@@ -24,7 +25,7 @@ namespace Stingray.WindowControls.Server
         public WebSocketServer(int port)
         {
             _server = new Fleck.WebSocketServer("ws://127.0.0.1:" + port);
-            _server.Start(ConfigureConnection);
+            _server.Start( ConfigureConnection );
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Stingray.WindowControls.Server
         {
             connection.Send(JsonConvert.SerializeObject(new
             {
-                type = "helloFromServer"
+                type = "serverInit"
             }));
         }
 
@@ -59,12 +60,19 @@ namespace Stingray.WindowControls.Server
             {
                 var jsonMessage = JObject.Parse(message);
                 var messageType = (string)jsonMessage["type"];
+                var name = (string)jsonMessage["name"];
 
                 switch (messageType)
                 {
-                    case "helloFromView":
-                        Debug.WriteLine(jsonMessage["name"] + " says hello!", "WebSocketServer");
+                    case "clientInit":
+                        _connections.Add(name, connection);
+                        Console.WriteLine(name + " registered!", "WebSocketServer");
                         break;
+
+                    case "changeValue":
+                        WebSocketServer.BroadcastMessage(message, name);
+                        break;
+
 
                     default:
                         throw new NotImplementedException("Unsupported message type: " + messageType);
@@ -73,6 +81,15 @@ namespace Stingray.WindowControls.Server
             catch (Exception exception)
             {
                 connection.Send(CreateErrorMessage(exception));
+            }
+        }
+
+        private static void BroadcastMessage(string message, string sender)
+        {
+            foreach (KeyValuePair<string, IWebSocketConnection> entry in _connections)
+            {
+                if (entry.Key != sender)
+                    entry.Value.Send(message);
             }
         }
 

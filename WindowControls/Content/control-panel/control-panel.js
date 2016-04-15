@@ -12,9 +12,9 @@
             if (messageType === "error") {
                 throw new Utils.RequestError(message);
             }
-            else if (messageType === "helloFromServer") {
+            else if (messageType === "serverInit") {
                 webSocket.send(JSON.stringify({
-                    type: "helloFromView",
+                    type: "clientInit",
                     name: "control-panel"
                 }));
             }
@@ -23,6 +23,5 @@
             }
         };
     }
-
     window.addEventListener("load", onLoad);
 })();
