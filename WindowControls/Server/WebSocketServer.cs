@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Fleck;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -16,7 +16,7 @@ namespace Stingray.WindowControls.Server
     internal class WebSocketServer : IDisposable
     {
         [CanBeNull] private IWebSocketServer _server;
-        private static Dictionary<String, IWebSocketConnection> _connections = new Dictionary<string, IWebSocketConnection>(); 
+        private static ConcurrentDictionary<String, IWebSocketConnection> _connections = new ConcurrentDictionary<string, IWebSocketConnection>(); 
 
         /// <summary>
         /// Starts the example web socket server listening for connections to the specified port. Polling happens on a background thread.
@@ -65,7 +65,11 @@ namespace Stingray.WindowControls.Server
                 switch (messageType)
                 {
                     case "clientInit":
-                        _connections.Add(name, connection);
+                        _connections.AddOrUpdate(name, connection,
+                            (key, oldValue) =>
+                            {
+                                return oldValue;
+                            });
                         Console.WriteLine(name + " registered!", "WebSocketServer");
                         break;
 
@@ -89,10 +93,10 @@ namespace Stingray.WindowControls.Server
 
         private static void BroadcastMessage(string message, string sender)
         {
-            foreach (KeyValuePair<string, IWebSocketConnection> entry in _connections)
+            foreach (var con in _connections)
             {
-                if (entry.Key != sender && entry.Value.IsAvailable)
-                        entry.Value.Send(message);
+                if (con.Key != sender && con.Value.IsAvailable)
+                    con.Value.Send(message);
             }
         }
 

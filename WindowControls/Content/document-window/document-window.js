@@ -50,10 +50,12 @@
                 }
             }
             else if (messageType === "serverInit") {
-                webSocket.send(JSON.stringify({
-                    type: "clientInit",
-                    name: "document-window"
-                }));
+                if (webSocket.readyState == 1) {
+                    webSocket.send(JSON.stringify({
+                        type: "clientInit",
+                        name: "document-window"
+                    }));
+                }
             }
             else {
                 throw new Utils.RequestError("Unsupported message type: " + messageType);

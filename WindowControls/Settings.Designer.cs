@@ -43,7 +43,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("800")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
         public int _mainWindowWidth {
             get {
                 return ((int)(this["_mainWindowWidth"]));
