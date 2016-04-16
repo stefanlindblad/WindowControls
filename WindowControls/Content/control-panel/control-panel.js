@@ -7,7 +7,14 @@
         
         // Registering editing actions
         var undo = document.getElementById("undoButton");
-        undo.addEventListener('click', function () { alert("Undo not implemented yet."); })
+        undo.addEventListener('click', function () {
+            if (webSocket.readyState == 1) {
+                webSocket.send(JSON.stringify({
+                    type: "undoChange",
+                    name: "control-panel",
+                }));
+            }
+        })
 
         var redo = document.getElementById("redoButton");
         redo.addEventListener('click', function () { alert("Redo not implemented yet."); })
@@ -25,56 +32,67 @@
                     type: "changeVariable",
                     variable: document.getElementById("textInput").value,
                     action: "headlineText",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: false
                 }));
             }
         })
-
+        textfield.addEventListener('change', function () {
+            if (webSocket.readyState == 1) {
+                webSocket.send(JSON.stringify({
+                    type: "changeVariable",
+                    variable: document.getElementById("textInput").value,
+                    action: "headlineText",
+                    name: "control-panel",
+                    register: true
+                }));
+            }
+        })
         var boldBox = document.getElementById("boldCheckBox");
         boldBox.addEventListener('change', function () {
-            var checked = "false";
+            var bold = "normal";
             if(document.getElementById("boldCheckBox").checked)
-                checked = "true";
+                bold = "bold";
             if (webSocket.readyState == 1) {
                 webSocket.send(JSON.stringify({
                     type: "changeVariable",
-                    variable: checked,
+                    variable: bold,
                     action: "boldToogle",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: true
                 }));
             }
         })
-
         var italicBox = document.getElementById("italicCheckBox");
         italicBox.addEventListener('change', function () {
-            var checked = "false";
+            var italic = "normal";
             if (document.getElementById("italicCheckBox").checked)
-                checked = "true";
+                italic = "italic";
             if (webSocket.readyState == 1) {
                 webSocket.send(JSON.stringify({
                     type: "changeVariable",
-                    variable: checked,
+                    variable: italic,
                     action: "italicToogle",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: true
                 }));
             }
         })
-
         var underlineBox = document.getElementById("underlineCheckBox");
         underlineBox.addEventListener('change', function () {
-            var checked = "false";
+            var underline = "";
             if (document.getElementById("underlineCheckBox").checked)
-                checked = "true";
+                underline = "underline";
             if (webSocket.readyState == 1) {
                 webSocket.send(JSON.stringify({
                     type: "changeVariable",
-                    variable: checked,
+                    variable: underline,
                     action: "underlineToogle",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: true
                 }));
             }
         })
-
         var spaceRangeBox = document.getElementById("spaceRange");
         spaceRangeBox.addEventListener('input', function () {
             if (webSocket.readyState == 1) {
@@ -82,11 +100,22 @@
                     type: "changeVariable",
                     variable: document.getElementById("spaceRange").value + "px",
                     action: "changeSpacing",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: false
                 }));
             }
         })
-
+        spaceRangeBox.addEventListener('change', function () {
+            if (webSocket.readyState == 1) {
+                webSocket.send(JSON.stringify({
+                    type: "changeVariable",
+                    variable: document.getElementById("spaceRange").value + "px",
+                    action: "changeSpacing",
+                    name: "control-panel",
+                    register: true
+                }));
+            }
+        })
         var sizeRangeBox = document.getElementById("sizeRange");
         sizeRangeBox.addEventListener('input', function () {
             if (webSocket.readyState == 1) {
@@ -94,19 +123,31 @@
                     type: "changeVariable",
                     variable: document.getElementById("sizeRange").value + "em",
                     action: "changeSize",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: false
                 }));
             }
         })
-
+        sizeRangeBox.addEventListener('change', function () {
+            if (webSocket.readyState == 1) {
+                webSocket.send(JSON.stringify({
+                    type: "changeVariable",
+                    variable: document.getElementById("sizeRange").value + "em",
+                    action: "changeSize",
+                    name: "control-panel",
+                    register: true
+                }));
+            }
+        })
         var fontSelector = document.getElementById("fontSelect");
         fontSelector.addEventListener('change', function () {
             if (webSocket.readyState == 1) {
                 webSocket.send(JSON.stringify({
                     type: "changeVariable",
-                    variable: document.getElementById("fontSelect").options[document.getElementById("fontSelect").selectedIndex].value,
+                    variable: document.getElementById("fontSelect").options[document.getElementById("fontSelect").selectedIndex].value + "__" + document.getElementById("fontSelect").selectedIndex,
                     action: "changeFont",
-                    name: "control-panel"
+                    name: "control-panel",
+                    register: true
                 }));
             }
 
@@ -124,48 +165,52 @@
                 var variable = message.variable;
 
                 if (action === "headlineText") {
-                    if (variable != "")
                     document.getElementById("textInput").value = variable;
                 }
                 else if (action === "boldToogle") {
-                    if (variable === "true")
+                    if (variable === "bold")
                         document.getElementById("boldCheckBox").checked = true;
                     else
                         document.getElementById("boldCheckBox").checked = false;
                 }
                 else if (action === "italicToogle") {
-                    if (variable === "true")
+                    if (variable === "italic")
                         document.getElementById("italicCheckBox").checked = true;
                     else
                         document.getElementById("italicCheckBox").checked = false;
                 }
                 else if (action === "underlineToogle") {
-                    if (variable === "true")
+                    if (variable === "underline")
                         document.getElementById("underlineCheckBox").checked = true;
                     else
                         document.getElementById("underlineCheckBox").checked = false;
                 }
                 else if (action === "changeSpacing") {
                     var variable = variable.slice(0, -2);
-                    document.getElementById("spaceRange").value = variable;
+                    if (variable === "")
+                        variable = "0"
+                    document.getElementById("spaceRange").value = variable + "px";
                     document.getElementById("spaceValue").value = variable;
                 }
                 else if (action === "changeSize") {
                     var variable = variable.slice(0, -2);
-                    document.getElementById("sizeRange").value = variable;
+                    if (variable === "")
+                        variable = "4"
+                    document.getElementById("sizeRange").value = variable + "em";
                     document.getElementById("sizeValue").value = variable;
                 }
                 else if (action === "changeFont") {
-                    document.getElementById("fontSelect").value = variable;
+
+                    var splittedVar = variable.split("__");
+                    var id = splittedVar[1];
+                    if (id === "")
+                        document.getElementById("fontSelect").selectedIndex = 0;
+                    else
+                        document.getElementById("fontSelect").selectedIndex = id
                 }
                 else {
                     throw new Utils.RequestError("Unsupported action type: " + action);
                 }
-                
-
-
-
-
                 return;
             }
             else if (messageType === "serverInit") {

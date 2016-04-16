@@ -4,6 +4,9 @@
     function onLoad() {
         var port = Utils.getWebSocketPort();
         var webSocket = new WebSocket("ws://127.0.0.1:" + port);
+        var headline = document.getElementById("headline");
+        var style = window.getComputedStyle(headline);
+        var oldValue = "";
 
         webSocket.onmessage = function (event) {
             var message = JSON.parse(event.data);
@@ -15,38 +18,105 @@
             else if (messageType === "changeVariable") {
                 var action = message.action;
                 var variable = message.variable;
+                var register = message.register;
                 
                 if (action === "headlineText") {
                     if (variable === "")
                         variable = "Enter Headline Text...";
-                    document.getElementById("headline").innerHTML = variable;
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerActionWithoutOldValue",
+                            action: action,
+                            name: "document-window",
+                            oldValue: "",
+                            newValue: variable
+                        }));
+                    }
+                    headline.innerHTML = variable;
                 }
                 else if (action === "boldToogle") {
-                    if(variable === "true")
-                        document.getElementById("headline").style.fontWeight = "bold";
-                    else
-                        document.getElementById("headline").style.fontWeight = "normal";
+                    oldValue = style.getPropertyValue('font-weight');
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerAction",
+                            action: action,
+                            name: "document-window",
+                            oldValue: oldValue,
+                            newValue: variable
+                        }));
+                    }
+                    headline.style.fontWeight = variable;
                 }
                 else if (action === "italicToogle") {
-                    if (variable === "true")
-                        document.getElementById("headline").style.fontStyle = "italic";
-                    else
-                        document.getElementById("headline").style.fontStyle = "normal";
+                    oldValue = style.getPropertyValue('font-style');
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerAction",
+                            action: action,
+                            name: "document-window",
+                            oldValue: oldValue,
+                            newValue: variable
+                        }));
+                    }
+                    headline.style.fontStyle = variable;
                 }
                 else if (action === "underlineToogle") {
-                    if (variable === "true")
-                        document.getElementById("headline").style.textDecoration = "underline";
-                    else
-                        document.getElementById("headline").style.textDecoration = "";
+                    oldValue = style.getPropertyValue('text-decoration');
+                    if (oldValue != "underline")
+                        oldValue = "normal";
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerAction",
+                            action: action,
+                            name: "document-window",
+                            oldValue: oldValue,
+                            newValue: variable
+                        }));
+                    }
+                    headline.style.textDecoration = variable;
                 }
                 else if (action === "changeSpacing") {
-                    document.getElementById("headline").style.letterSpacing = variable;
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerActionWithoutOldValue",
+                            action: action,
+                            name: "document-window",
+                            oldValue: "",
+                            newValue: variable
+                        }));
+                    }
+                    if (variable === "")
+                        variable = "0px"
+                    headline.style.letterSpacing = variable;
                 }
                 else if (action === "changeSize") {
-                    document.getElementById("headline").style.fontSize = variable;
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerActionWithoutOldValue",
+                            action: action,
+                            name: "document-window",
+                            oldValue: "",
+                            newValue: variable
+                        }));
+                    }
+                    if (variable === "")
+                        variable = "4em"
+                    headline.style.fontSize = variable;
                 }
                 else if (action === "changeFont") {
-                    document.getElementById("headline").style.fontFamily = variable;
+                    oldValue = style.getPropertyValue('font-family');
+                    if (webSocket.readyState == 1 && register) {
+                        webSocket.send(JSON.stringify({
+                            type: "registerActionWithoutOldValue",
+                            action: action,
+                            name: "document-window",
+                            oldValue: "",
+                            newValue: variable
+                        }));
+                    }
+                    var splittedVar = variable.split("__");
+                    var fontName = splittedVar[0];
+                    headline.style.fontFamily = fontName;
                 }
                 else {
                     throw new Utils.RequestError("Unsupported action type: " + action);

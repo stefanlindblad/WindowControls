@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Text;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Fleck;
 using JetBrains.Annotations;
@@ -19,8 +18,8 @@ namespace Stingray.WindowControls.Server
     internal class WebSocketServer : IDisposable
     {
         [CanBeNull] private IWebSocketServer _server;
-        private static ConcurrentDictionary<string, IWebSocketConnection> _connections = new ConcurrentDictionary<string, IWebSocketConnection>();
-        private static Dictionary<string, string> _values = new Dictionary<string, string>();
+        private static StateHolder ServerStateHolder = new StateHolder();
+        private static ConcurrentDictionary<string, IWebSocketConnection> Connections = new ConcurrentDictionary<string, IWebSocketConnection>();
 
         /// <summary>
         /// Starts the example web socket server listening for connections to the specified port. Polling happens on a background thread.
@@ -69,20 +68,21 @@ namespace Stingray.WindowControls.Server
                 switch (messageType)
                 {
                     case "clientInit":
-                        _connections.AddOrUpdate(name, connection,
-                            (key, oldValue) =>
+                        // Check if a connection with NAME already exists, add it if not or update the value recordingly
+                        Connections.AddOrUpdate(name, connection,
+                            (k, v) =>
                             {
-                                oldValue = connection;
-                                return oldValue;
+                                v = connection;
+                                return v;
                             });
                         connection.Send(JsonConvert.SerializeObject(new
                         {
                             type = "serverAck"
                         }));
-                        Console.WriteLine(name + " registered!", "WebSocketServer");
                         break;
 
                     case "requestFontList":
+                        // Iterate over all fonts installed in the system and send them to the requested client
                         using (InstalledFontCollection ifc = new InstalledFontCollection())
                         {
                             foreach (FontFamily ff in ifc.Families)
@@ -91,20 +91,47 @@ namespace Stingray.WindowControls.Server
                             }
                         }
                         break;
-                    
-                    case "changeVariable":
-                        var variable = (string)jsonMessage["variable"];
+                    case "undoChange":
+                        State stu = ServerStateHolder.UndoAction();
+                        if(stu != null)
+                        {
+                            WebSocketServer.BroadcastMessage(CreateVariableMessage(stu.action, stu.oldValue, false), "webserver");
+                            Console.WriteLine("Undo: " + stu.action + ", Before: " + stu.newValue + ", Now: " + stu.oldValue, "undoChange");
+                        }
+                        break;
+                    case "redoChange":
+
+                        // TODO
+
+                        break;
+                    // Register a Action in the undo/redo stack for being able to undo the changes
+                    case "registerAction":
+                        var newValue = (string)jsonMessage["newValue"];
+                        var oldValue = (string)jsonMessage["oldValue"];
                         var action = (string)jsonMessage["action"];
-                        WebSocketServer.SetElement(action, variable);
+                        ServerStateHolder.DoAction(action, oldValue, newValue);
+                        Console.WriteLine("Register: " + action + ", Before: " + oldValue + ", Now: " + newValue, "registerChange");
+                        break;
+                    // Special Action Register Event for changes that come without an old value -> less performant!
+                    case "registerActionWithoutOldValue":
+                        var nv = (string)jsonMessage["newValue"];
+                        var a = (string)jsonMessage["action"];
+                        var ov = ServerStateHolder.GetLastValue(a);
+                        ServerStateHolder.DoAction(a, ov, nv);
+                        Console.WriteLine("Register: " + a + ", Before: " + ov + ", Now: " + nv, "registerChange");
+                        break;
+
+                    case "changeVariable":
                         WebSocketServer.BroadcastMessage(message, name);
-                        //Console.WriteLine(action + ": " + variable, "WebSocketServer");
                         break;
 
                     case "requestVariables":
-                        foreach(KeyValuePair<string, string> kvp in _values)
+                        State[] actions = ServerStateHolder.GetDoneActions();
+                        // Iterate backward through the actions, since we unwind the stack
+                        for(int i = actions.Length-1; i >= 0; i--)
                         {
-                            //Console.WriteLine("Action: " + kvp.Key + ", Value: " + kvp.Value, "RequestVariables");
-                            WebSocketServer.SendMessage(CreateVariableMessage(kvp.Key, kvp.Value), name);
+                            State s = actions[i];
+                            WebSocketServer.SendMessage(CreateVariableMessage(s.action, s.newValue, false), name);
                         }
                         break;
 
@@ -124,15 +151,14 @@ namespace Stingray.WindowControls.Server
             }
         }
 
-        private static void SetElement(string key, string value)
-        {
-            _values[key] = value;
-        }
-
+        /** The SendMessage Method sends a msg to one client
+        /*  message = the message to send
+        /*  recipient = the recipient of the message
+        */
         private static void SendMessage(string message, string recipient)
         {
             bool sent = false;
-            foreach (var con in _connections)
+            foreach (var con in Connections)
             {
                 if (con.Key == recipient && con.Value.IsAvailable)
                 {
@@ -144,9 +170,13 @@ namespace Stingray.WindowControls.Server
                 Console.WriteLine("Recipient not found!");
         }
 
+        /** The BroadcastMessage Method broadcasts a msg to all clients
+        /*  message = the message to send
+        /*  sender = the sender of the message who is excluded from getting it.
+        */
         private static void BroadcastMessage(string message, string sender)
         {
-            foreach (var con in _connections)
+            foreach (var con in Connections)
             {
                 if (con.Key != sender && con.Value.IsAvailable)
                     con.Value.Send(message);
@@ -165,6 +195,11 @@ namespace Stingray.WindowControls.Server
             });
         }
 
+        /** The CreateFontMessage returns a serialized Json Message to register a font entry in the JS Frontend
+        /*  type = the type to distinquish it from other system messages
+        /*  name = the sender of the message
+        /*  font = the font to register
+        */
         [NotNull, Pure]
         private static string CreateFontMessage(string fontName)
         {
@@ -176,15 +211,24 @@ namespace Stingray.WindowControls.Server
             });
         }
 
+        /** The CreateVariableMessage returns a serialized Json Message for changing variables
+        /*  type = the type to distinquish it from other system messages
+        /*  action = the action performed, which is used to identify the variable to change
+        /*  oldValue = the old value of the variable before the change was performed
+        /*  newValue = the new value of the variable
+        /*  name = the sender of the message
+        /*  register = if the change should be registered at the undo/redo stack, only for major changes, not typing e.g.
+        */
         [NotNull, Pure]
-        private static string CreateVariableMessage(string action, string variable)
+        private static string CreateVariableMessage(string action, string value, bool registerForUndo)
         {
             return JsonConvert.SerializeObject(new
             {
                 type = "changeVariable",
                 action = action,
-                variable = variable,
-                name = "webserver"
+                variable = value,
+                name = "webserver",
+                register = registerForUndo
             });
         }
     }
