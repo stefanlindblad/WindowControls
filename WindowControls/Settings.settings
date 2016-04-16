@@ -18,7 +18,7 @@
       <Value Profile="(Default)">300</Value>
     </Setting>
     <Setting Name="_ctrlWindowHeight" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">260</Value>
+      <Value Profile="(Default)">255</Value>
     </Setting>
     <Setting Name="_contentPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">../../../Content</Value>

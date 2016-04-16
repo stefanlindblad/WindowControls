@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\3rdparty\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Content\3rdparty\FontDetector\FontDetector.js" />
     <Content Include="Content\3rdparty\open-sans\css\open-sans.min.css" />
     <Content Include="Content\common\app.css" />
     <Content Include="Content\common\controls.css" />

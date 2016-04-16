@@ -70,7 +70,7 @@ namespace Stingray.WindowControls {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("260")]
+        [global::System.Configuration.DefaultSettingValueAttribute("255")]
         public int _ctrlWindowHeight {
             get {
                 return ((int)(this["_ctrlWindowHeight"]));

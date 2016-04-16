@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="../3rdparty/open-sans/css/open-sans.min.css"/>
         <link rel="stylesheet" type="text/css" href="control-panel.css"/>
         <script type="text/javascript" src="../common/utils.js"></script>
+        <script type="text/javascript" src="../3rdparty/FontDetector/FontDetector.js"></script>
         <script type="text/javascript" src="control-panel.js"></script>
     </head>
     <body>
@@ -36,8 +37,8 @@
             </div>
             <div id="spacingElement">
                 <label id="spacingLabel">Spacing:</label>
-                <input id="spaceRange" value="0" type="range" min="-10" max="20" step="1" oninput="document.getElementById('spacingValue').value = this.value;"/>
-                <input type="text" readonly="true" id="spacingValue" size="1" value="0"/>
+                <input id="spaceRange" value="0" type="range" min="-10" max="20" step="1" oninput="document.getElementById('spaceValue').value = this.value;"/>
+                <input type="text" readonly="true" id="spaceValue" size="1" value="0"/>
             </div>
             <div id="buttonElement">
                 <input class="marginButtons" id="undoButton" type="button" value="Undo"/>

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Text;
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Fleck;
 using JetBrains.Annotations;
@@ -16,7 +19,8 @@ namespace Stingray.WindowControls.Server
     internal class WebSocketServer : IDisposable
     {
         [CanBeNull] private IWebSocketServer _server;
-        private static ConcurrentDictionary<String, IWebSocketConnection> _connections = new ConcurrentDictionary<string, IWebSocketConnection>(); 
+        private static ConcurrentDictionary<string, IWebSocketConnection> _connections = new ConcurrentDictionary<string, IWebSocketConnection>();
+        private static Dictionary<string, string> _values = new Dictionary<string, string>();
 
         /// <summary>
         /// Starts the example web socket server listening for connections to the specified port. Polling happens on a background thread.
@@ -68,16 +72,45 @@ namespace Stingray.WindowControls.Server
                         _connections.AddOrUpdate(name, connection,
                             (key, oldValue) =>
                             {
+                                oldValue = connection;
                                 return oldValue;
                             });
+                        connection.Send(JsonConvert.SerializeObject(new
+                        {
+                            type = "serverAck"
+                        }));
                         Console.WriteLine(name + " registered!", "WebSocketServer");
                         break;
 
+                    case "requestFontList":
+                        using (InstalledFontCollection ifc = new InstalledFontCollection())
+                        {
+                            foreach (FontFamily ff in ifc.Families)
+                            {
+                                WebSocketServer.SendMessage(CreateFontMessage(ff.Name), name);
+                            }
+                        }
+                        break;
+                    
                     case "changeVariable":
                         var variable = (string)jsonMessage["variable"];
                         var action = (string)jsonMessage["action"];
+                        WebSocketServer.SetElement(action, variable);
                         WebSocketServer.BroadcastMessage(message, name);
                         //Console.WriteLine(action + ": " + variable, "WebSocketServer");
+                        break;
+
+                    case "requestVariables":
+                        foreach(KeyValuePair<string, string> kvp in _values)
+                        {
+                            //Console.WriteLine("Action: " + kvp.Key + ", Value: " + kvp.Value, "RequestVariables");
+                            WebSocketServer.SendMessage(CreateVariableMessage(kvp.Key, kvp.Value), name);
+                        }
+                        break;
+
+                    case "debug":
+                        var debug = (string)jsonMessage["debug"];
+                        Console.WriteLine("Debug Console: " + debug, "Javascript");
                         break;
 
                     default:
@@ -89,6 +122,26 @@ namespace Stingray.WindowControls.Server
                 if(connection.IsAvailable)
                     connection.Send(CreateErrorMessage(exception));
             }
+        }
+
+        private static void SetElement(string key, string value)
+        {
+            _values[key] = value;
+        }
+
+        private static void SendMessage(string message, string recipient)
+        {
+            bool sent = false;
+            foreach (var con in _connections)
+            {
+                if (con.Key == recipient && con.Value.IsAvailable)
+                {
+                    con.Value.Send(message);
+                    sent = true;
+                }
+            }
+            if (!sent)
+                Console.WriteLine("Recipient not found!");
         }
 
         private static void BroadcastMessage(string message, string sender)
@@ -109,6 +162,29 @@ namespace Stingray.WindowControls.Server
                 name = exception.GetType().Name,
                 message = exception.Message,
                 stack = exception.StackTrace
+            });
+        }
+
+        [NotNull, Pure]
+        private static string CreateFontMessage(string fontName)
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                type = "fontEntry",
+                name = "webserver",
+                font = fontName
+            });
+        }
+
+        [NotNull, Pure]
+        private static string CreateVariableMessage(string action, string variable)
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                type = "changeVariable",
+                action = action,
+                variable = variable,
+                name = "webserver"
             });
         }
     }

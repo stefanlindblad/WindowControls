@@ -22,19 +22,19 @@
                     document.getElementById("headline").innerHTML = variable;
                 }
                 else if (action === "boldToogle") {
-                    if(variable === true)
+                    if(variable === "true")
                         document.getElementById("headline").style.fontWeight = "bold";
                     else
                         document.getElementById("headline").style.fontWeight = "normal";
                 }
                 else if (action === "italicToogle") {
-                    if (variable === true)
+                    if (variable === "true")
                         document.getElementById("headline").style.fontStyle = "italic";
                     else
                         document.getElementById("headline").style.fontStyle = "normal";
                 }
                 else if (action === "underlineToogle") {
-                    if (variable === true)
+                    if (variable === "true")
                         document.getElementById("headline").style.textDecoration = "underline";
                     else
                         document.getElementById("headline").style.textDecoration = "";
@@ -44,6 +44,9 @@
                 }
                 else if (action === "changeSize") {
                     document.getElementById("headline").style.fontSize = variable;
+                }
+                else if (action === "changeFont") {
+                    document.getElementById("headline").style.fontFamily = variable;
                 }
                 else {
                     throw new Utils.RequestError("Unsupported action type: " + action);
@@ -56,6 +59,17 @@
                         name: "document-window"
                     }));
                 }
+            }
+            else if (messageType === "serverAck") {
+                if (webSocket.readyState == 1) {
+                    webSocket.send(JSON.stringify({
+                        type: "requestVariables",
+                        name: "document-window"
+                    }));
+                }
+            }
+            else if (messageType === "fontEntry") {
+                throw new Utils.RequestError("Wrong Recipient: " + messageType);
             }
             else {
                 throw new Utils.RequestError("Unsupported message type: " + messageType);
