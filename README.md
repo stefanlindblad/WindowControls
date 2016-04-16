@@ -24,3 +24,6 @@ and sends the fonts to the scripting part. (JS). Here every font is again tested
 For being persistent against page reloads the editing changes are currently saved in a dictionary
 from the server in a central place and retrieved from the clients after reloading their pages
 
+The Undo/Redo System is done by two stacks one for redo and one for undo who save actions and their
+old and respectively new values together in a bundled State Class. This enables to leave the implementation
+details of undo/redo actions to stay in Javascript since the undo rewind only calls a "change" with old values
