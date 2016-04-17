@@ -114,7 +114,7 @@ namespace Stingray.WindowControls.Server
                             oldValue = ServerStateManager.GetLastAction(action);
                         ServerStateManager.DoAction(action, oldValue, newValue);
                         WebSocketServer.BroadcastMessage(CreateUndoRedoMessage(), "webserver");
-                        Console.WriteLine("Register: " + action + ", Before: " + oldValue + ", Now: " + newValue, "registerChange");
+                        //Console.WriteLine("Register: " + action + ", Before: " + oldValue + ", Now: " + newValue, "registerChange");
                         break;
                     // Send a variable change to all clients
                     case "changeVariable":
@@ -159,7 +159,7 @@ namespace Stingray.WindowControls.Server
             {
                 WebSocketServer.BroadcastMessage(CreateVariableMessage(stu.action, stu.oldValue, false), "webserver");
                 WebSocketServer.BroadcastMessage(CreateUndoRedoMessage(), "webserver");
-                Console.WriteLine("Undo: " + stu.action + ", Before: " + stu.newValue + ", Now: " + stu.oldValue, "undoChange");
+                //Console.WriteLine("Undo: " + stu.action + ", Before: " + stu.newValue + ", Now: " + stu.oldValue, "undoChange");
             }
         }
 
@@ -174,7 +174,7 @@ namespace Stingray.WindowControls.Server
             {
                 WebSocketServer.BroadcastMessage(CreateVariableMessage(str.action, str.newValue, false), "webserver");
                 WebSocketServer.BroadcastMessage(CreateUndoRedoMessage(), "webserver");
-                Console.WriteLine("Redo: " + str.action + ", Before: " + str.newValue + ", Now: " + str.oldValue, "redoChange");
+                //Console.WriteLine("Redo: " + str.action + ", Before: " + str.newValue + ", Now: " + str.oldValue, "redoChange");
             }
         }
 
@@ -194,8 +194,6 @@ namespace Stingray.WindowControls.Server
                     sent = true;
                 }
             }
-            if (!sent)
-                Console.WriteLine("Recipient not found!");
         }
 
         /// <summary>
