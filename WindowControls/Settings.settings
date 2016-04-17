@@ -26,10 +26,10 @@
     <Setting Name="_defaultPort" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">9696</Value>
     </Setting>
-    <Setting Name="_mainWindowName" Type="System.String" Scope="User">
+    <Setting Name="_mainWindowName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">document-window</Value>
     </Setting>
-    <Setting Name="_ctrlWindowName" Type="System.String" Scope="User">
+    <Setting Name="_ctrlWindowName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">control-panel</Value>
     </Setting>
   </Settings>

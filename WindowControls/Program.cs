@@ -15,9 +15,6 @@ namespace Stingray.WindowControls
     /// </summary>
     internal class Program
     {
-        // Default port for the websocket server if not supplied as a command-line argument.
-        private static int DefaultPort = WindowControls.Settings.Default._defaultPort;
-
         // We keep the control panel as state, since it needs to be accessible inside DocumentWindowOnLocationChanged.
         private static Form _controlPanel;
 
@@ -31,7 +28,7 @@ namespace Stingray.WindowControls
 
             // Parse port number from command line, if supplied.
             if (!Int32.TryParse(commandLineArgs.FirstOrDefault(), out port))
-                port = DefaultPort;
+                port = WindowControls.Settings.Default._defaultPort;
 
             // Set up a document window and a control panel to edit it.
             var mainWindowName = WindowControls.Settings.Default._mainWindowName;

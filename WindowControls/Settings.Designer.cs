@@ -95,27 +95,21 @@ namespace Stingray.WindowControls {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("document-window")]
         public string _mainWindowName {
             get {
                 return ((string)(this["_mainWindowName"]));
             }
-            set {
-                this["_mainWindowName"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("control-panel")]
         public string _ctrlWindowName {
             get {
                 return ((string)(this["_ctrlWindowName"]));
-            }
-            set {
-                this["_ctrlWindowName"] = value;
             }
         }
     }
