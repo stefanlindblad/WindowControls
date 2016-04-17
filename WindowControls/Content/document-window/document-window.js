@@ -25,7 +25,7 @@
                         variable = "Enter Headline Text...";
                     if (webSocket.readyState == 1 && register) {
                         webSocket.send(JSON.stringify({
-                            type: "registerActionWithoutOldValue",
+                            type: "registerAction",
                             action: action,
                             name: "document-window",
                             oldValue: "",
@@ -63,7 +63,7 @@
                 else if (action === "underlineToogle") {
                     oldValue = style.getPropertyValue('text-decoration');
                     if (oldValue != "underline")
-                        oldValue = "normal";
+                        oldValue = "none";
                     if (webSocket.readyState == 1 && register) {
                         webSocket.send(JSON.stringify({
                             type: "registerAction",
@@ -78,7 +78,7 @@
                 else if (action === "changeSpacing") {
                     if (webSocket.readyState == 1 && register) {
                         webSocket.send(JSON.stringify({
-                            type: "registerActionWithoutOldValue",
+                            type: "registerAction",
                             action: action,
                             name: "document-window",
                             oldValue: "",
@@ -92,7 +92,7 @@
                 else if (action === "changeSize") {
                     if (webSocket.readyState == 1 && register) {
                         webSocket.send(JSON.stringify({
-                            type: "registerActionWithoutOldValue",
+                            type: "registerAction",
                             action: action,
                             name: "document-window",
                             oldValue: "",
@@ -107,7 +107,7 @@
                     oldValue = style.getPropertyValue('font-family');
                     if (webSocket.readyState == 1 && register) {
                         webSocket.send(JSON.stringify({
-                            type: "registerActionWithoutOldValue",
+                            type: "registerAction",
                             action: action,
                             name: "document-window",
                             oldValue: "",
@@ -133,7 +133,7 @@
             else if (messageType === "serverAck") {
                 if (webSocket.readyState == 1) {
                     webSocket.send(JSON.stringify({
-                        type: "requestVariables",
+                        type: "requestStack",
                         name: "document-window"
                     }));
                 }

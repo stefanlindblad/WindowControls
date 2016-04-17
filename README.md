@@ -21,9 +21,13 @@ For having a valid font list available, i used a 2 way approach. When the server
 for delivering a list of fonts from one of the window elements, he retrieves these from the system
 and sends the fonts to the scripting part. (JS). Here every font is again tested against browser support.
 
-For being persistent against page reloads the editing changes are currently saved in a dictionary
-from the server in a central place and retrieved from the clients after reloading their pages
-
 The Undo/Redo System is done by two stacks one for redo and one for undo who save actions and their
 old and respectively new values together in a bundled State Class. This enables to leave the implementation
 details of undo/redo actions to stay in Javascript since the undo rewind only calls a "change" with old values
+
+The data persistence through page reloads is also handled in the same way. When the page reloads a new
+handshake with the server is performed and the client windows request the variable stack then.
+
+The main goal through development was to try to keep the fixed implementation out of the C# base.
+Meaning that for example the server should be handle all undo/redo actions independent what these
+actions perform on the client side then.

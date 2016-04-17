@@ -1,6 +1,6 @@
 using System.Windows.Forms;
-using System;
 using CefSharp;
+using Stingray.WindowControls.Server;
 
 namespace Stingray.WindowControls.Client
 {
@@ -24,6 +24,16 @@ namespace Stingray.WindowControls.Client
                     // Ctrl+R reloads the page.
                     case Keys.R:
                         browserControl.Reload(true);
+                        return true;
+
+                    // Ctrl+Z undos the last action
+                    case Keys.Z:
+                        WebSocketServer.Undo();
+                        return true;
+
+                    // Ctrl+Y redos the last action
+                    case Keys.Y:
+                        WebSocketServer.Redo();
                         return true;
                 }
             }
